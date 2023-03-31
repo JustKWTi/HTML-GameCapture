@@ -11,6 +11,9 @@
         overflow: hidden;
       }
       #video {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: fill;
@@ -25,6 +28,21 @@
         .then(function(stream) {
           var video = document.querySelector('#video');
           video.srcObject = stream;
+          window.addEventListener('resize', resizeVideo);
+          resizeVideo();
+          function resizeVideo() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var videoAspectRatio = video.videoWidth / video.videoHeight;
+            var windowAspectRatio = windowWidth / windowHeight;
+            if (windowAspectRatio > videoAspectRatio) {
+              video.style.width = (windowHeight * videoAspectRatio) + 'px';
+              video.style.height = windowHeight + 'px';
+            } else {
+              video.style.width = windowWidth + 'px';
+              video.style.height = (windowWidth / videoAspectRatio) + 'px';
+            }
+          }
         })
         .catch(function(error) {
           console.log('Error: ' + error.message);
